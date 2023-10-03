@@ -36,31 +36,34 @@ def dfs(graph, current_city, goal_city, visited=None, path=None):
     path = path + [current_city]
 
     if current_city == goal_city:
-        return path
+        # Calculate path cost
+        path_cost = sum(graph[path[i]][path[i + 1]] for i in range(len(path) - 1))
+        return path, path_cost
 
     for neighbor, _ in sorted(graph[current_city].items(), key=lambda x: x[1]):
         if neighbor not in visited:
-            new_path = dfs(graph, neighbor, goal_city, visited, path)
+            new_path, path_cost = dfs(graph, neighbor, goal_city, visited, path)
             if new_path:
-                return new_path
+                return new_path, path_cost
 
-    return []
+    return [], 0  # No path, cost is 0
+
 
 # Printing the paths for each of the start cities to Bucharest
 start_city_dfs = 'Timisoara'
 goal_city_dfs = 'Bucharest'
-path_dfs = dfs(graph, start_city_dfs, goal_city_dfs)
-print(f"DFS Path from {start_city_dfs} to {goal_city_dfs}: {path_dfs}")
+path_dfs, cost_dfs = dfs(graph, start_city_dfs, goal_city_dfs)
+print(f"DFS Path from {start_city_dfs} to {goal_city_dfs}: {path_dfs}, Cost: {cost_dfs}")
 
 start_city_dfs = 'Oradea'
 goal_city_dfs = 'Bucharest'
-path_dfs = dfs(graph, start_city_dfs, goal_city_dfs)
-print(f"DFS Path from {start_city_dfs} to {goal_city_dfs}: {path_dfs}")
+path_dfs, cost_dfs = dfs(graph, start_city_dfs, goal_city_dfs)
+print(f"DFS Path from {start_city_dfs} to {goal_city_dfs}: {path_dfs}, Cost: {cost_dfs}")
 
 start_city_dfs = 'Neamt'
 goal_city_dfs = 'Bucharest'
-path_dfs = dfs(graph, start_city_dfs, goal_city_dfs)
-print(f"DFS Path from {start_city_dfs} to {goal_city_dfs}: {path_dfs}")
+path_dfs, cost_dfs = dfs(graph, start_city_dfs, goal_city_dfs)
+print(f"DFS Path from {start_city_dfs} to {goal_city_dfs}: {path_dfs}, Cost: {cost_dfs}")
 
 # A* Search
 
