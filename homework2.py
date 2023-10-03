@@ -71,5 +71,9 @@ DFS Path from Oradea to Bucharest: ['Oradea', 'Zerind', 'Arad', 'Timisoara', 'Lu
 DFS Path from Neamt to Bucharest: ['Neamt', 'Iasi', 'Vaslui', 'Urziceni', 'Bucharest']
 
 # Correctness Discussion for each algorithm
+# For DFS the algorithm does work correctly and will actively return an empty list if no such path exists between the start and end goal city however for the longer paths with more options it is not as effective. 
+# It does find the shortest path for Neamt especially because there are not too many options for what path the algorithm could look into taking. 
+# It found the shortest path when going from Timisoara to Bucharest. 
+# It did not find the least costy/shortest path when going from Oreda to Bucharest. It shows the smallest value for each pair of values but overall led it to still being a longer path. 
 
 # Efficiency Discussion for each algorithm
