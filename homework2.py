@@ -80,3 +80,6 @@ DFS Path from Neamt to Bucharest: ['Neamt', 'Iasi', 'Vaslui', 'Urziceni', 'Bucha
 # It did not find the least costy/shortest path when going from Oreda to Bucharest. It shows the smallest value for each pair of values but overall led it to still being a longer path. 
 
 # Efficiency Discussion for each algorithm
+#DFS
+#The alogorithm is more efficent for when there are fewer options or paths to take and gets less accuracte and efficent the more options you give it. 
+#For the path from Oreda to Bucharest it chose the more costly path because the options presented to it were technically shorter but it had to go through more cities to get to Bucharest. 
