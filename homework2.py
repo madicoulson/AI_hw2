@@ -1,4 +1,4 @@
-from collections import defaultdict, deque
+from collections import deque
 
 # Graph including all the cities and their path values
 graph = {
@@ -25,24 +25,42 @@ graph = {
 }
 
 # BFS
-def bfs(graph, start, end):
-    visited = set()
-    queue = deque([(start, [start], 0)])  # Add the cost element (initialized to 0)
+def bfs(graph, start_city, goal_city):
+    
+    # Base case - if the start and goal city are the same, return the goal city
+    # as the path and 0 as the cost
+    if start_city == goal_city:
+        return [goal_city], 0
+    
+    # Initialize a list to keep track of visited cities
+    visited_cities = list()
+    
+    # Initialize a queue to hold the current city, path to the current city, and the cost
+    # This begins with only the starting city, but will be appended to in the traversal
+    queue = deque([(start_city, [start_city], 0)]) 
 
+    # Begin the traversal of the queue
     while queue:
+        # Pop the current city and add it to the visited set
         current_city, path, cost = queue.popleft()
-        visited.add(current_city)
+        visited_cities.append(current_city)
 
-        if current_city == end:
-            return path, cost  # Return both the path and the total cost
+        # Return the path and cost if the current city is equal to the goal city (arrived)
+        if current_city == goal_city:
+            return path, cost  
 
+        # The neighbors of the current city from the graph are checked
         for neighbor, neighbor_cost in graph[current_city].items():
-            if neighbor not in visited:
+            # If the neighbor is not in visited_cities, the path and cost are incremented by
+            # the neighbors path and cost, and each value is appended to the queue
+            if neighbor not in visited_cities:
                 new_path = path + [neighbor]
                 new_cost = cost + neighbor_cost
                 queue.append((neighbor, new_path, new_cost))
 
-    return None, float('inf')  # No path found, return an infinite cost
+    # No path found - return empty list and cost of 0
+    return [], 0  
+
 
 # DFS
 def dfs(graph, current_city, goal_city, visited=None, path=None):
@@ -65,7 +83,8 @@ def dfs(graph, current_city, goal_city, visited=None, path=None):
             if new_path:
                 return new_path, path_cost
 
-    return [], 0  # No path, cost is 0
+    # No path found - return empty list and cost of 0
+    return [], 0 
 
 # A* Search
 
@@ -117,6 +136,10 @@ print(f"BFS Path from {start_city3} to {goal_city}: {path_bfs}, Cost: {cost_bfs}
 # It did not find the least costy/shortest path when going from Oreda to Bucharest. It shows the smallest value for each pair of values but overall led it to still being a longer path. 
 
 ### BFS
+# The BFS algorithm does work correctly and will return a path and cost for the graph, or will return an empty list and 0 otherwise.
+# It does find the shortest path cost path from Timisoara to Bucharest, but performed better than DFS did. The path should have gone to Rimnicu Vilcea and Pitesti instead of Fagaras.
+# It does find the shortest path cost path from Oradea to Bucharest, but performed much better then DFS. The issue was the same as above.
+# It does find the shortest path from Neamt to Bucharest, and performed the same as DFS.
 
 
 # -- Efficiency Discussion for each algorithm --
@@ -125,3 +148,9 @@ print(f"BFS Path from {start_city3} to {goal_city}: {path_bfs}, Cost: {cost_bfs}
 # For the path from Oreda to Bucharest it chose the more costly path because the options presented to it were technically shorter but it had to go through more cities to get to Bucharest. 
 
 ### BFS
+# It does not find the lowest cost path from Timisoara to Bucharest, but performed better than DFS did. The path should have gone to Rimnicu Vilcea and Pitesti instead of Fagaras.
+# It does not find the lowest cost path from Oradea to Bucharest, but performed much better then DFS. The issue was the same as above.
+# It does find the lowest cosst path from Neamt to Bucharest, and performed the same as DFS.
+# The time complexity of BFS is O(V+E), where V is the vertices and E is the edges
+
+
