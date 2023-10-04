@@ -42,7 +42,7 @@ def bfs(graph, start_city, goal_city):
 
     # Begin the traversal of the queue
     while queue:
-        # Pop the current city and add it to the visited set
+        # Pop the current city and add it to the visited_cities list
         current_city, path, cost = queue.popleft()
         visited_cities.append(current_city)
 
@@ -50,7 +50,7 @@ def bfs(graph, start_city, goal_city):
         if current_city == goal_city:
             return path, cost  
 
-        # The neighbors of the current city from the graph are checked
+        # Check the neighbors of the current city from the graph
         for neighbor, neighbor_cost in graph[current_city].items():
             # If the neighbor is not in visited_cities, the path and cost are incremented by
             # the neighbors path and cost, and each value is appended to the queue
@@ -65,22 +65,29 @@ def bfs(graph, start_city, goal_city):
 
 # DFS
 def dfs(graph, current_city, goal_city, visited=None, path=None):
+    
+    # Initialize both visited and path if they are None
     if visited is None:
         visited = set()
     if path is None:
         path = []
 
+    # Add both the current_city to both the visited set and path list
     visited.add(current_city)
     path = path + [current_city]
 
+    # Return the path and cost if the current city is equal to the goal city (arrived)
     if current_city == goal_city:
         # Calculate path cost
         path_cost = sum(graph[path[i]][path[i + 1]] for i in range(len(path) - 1))
         return path, path_cost
 
+    # Traverse through neighbors of current city based on their edge cost
     for neighbor, _ in sorted(graph[current_city].items(), key=lambda x: x[1]):
+        # If the neighbor is not in visited, recursively run dfs again to try to find a new_path
         if neighbor not in visited:
             new_path, path_cost = dfs(graph, neighbor, goal_city, visited, path)
+            # If the new_path is found, then it connects to the goal city and is returned
             if new_path:
                 return new_path, path_cost
 
@@ -89,40 +96,56 @@ def dfs(graph, current_city, goal_city, visited=None, path=None):
 
 # A* Search
 class Node:
+    # Constructor for a Node that represents a city
     def __init__(self, city, g_value):
-        self.city = city
-        self.g_value = g_value
-        self.f_value = g_value
-        self.parent = None
+        self.city = city        # City value
+        self.g_value = g_value  # Cost to reach city
+        self.f_value = g_value  # Estimated cost of path
+        self.parent = None      # Parent Node
 
 def a_star(graph, start_city, goal_city):
+    # Initialize node with start_city, empty priority queue open_set, and set for visited cities closed_set
     start_node = Node(start_city, 0)
     open_set = []
-    heapq.heappush(open_set, (start_node.f_value, id(start_node), start_node))
     closed_set = set()
+    
+    # Place start node in priority queue with f_value as the priority
+    heapq.heappush(open_set, (start_node.f_value, id(start_node), start_node))
+    
 
     while open_set:
         _, _, current_node = heapq.heappop(open_set)
 
+        # Check if the current city equals the goal city
         if current_node.city == goal_city:
+            # Calculate cost and append values to the path
             path = []
             cost = current_node.g_value if current_node else -1  
             while current_node:
                 path.append(current_node.city)
                 current_node = current_node.parent
-            return path[::-1], cost  # Return the path and the cost
+            
+            # Return the path and the cost
+            return path[::-1], cost  
 
+        # Add current city to visited set
         closed_set.add(current_node.city)
 
+        # Check the neighbors of the current city from the graph
         for neighbor, cost in graph[current_node.city].items():
+            # If the neighbor is not in the visited closed_set, then calculate a new g_value 
+            # for the neighbor (cost), set the parent of the neighbor to the current node, and 
+            # push the neighbor node onto the priority queue
             if neighbor not in closed_set:
                 g_value = current_node.g_value + cost
                 neighbor_node = Node(neighbor, g_value)
                 neighbor_node.parent = current_node
 
                 heapq.heappush(open_set, (g_value, id(neighbor_node), neighbor_node))
+    
+    # No path found - return empty list and cost of 0
+    return [], 0  
 
-    return [], -1  # No path found, return empty path and cost -1
 # Printing the paths for each of the start cities to Bucharest
 goal_city = 'Bucharest'
 
@@ -211,3 +234,9 @@ print(f"A* Path from {start_city3} to {goal_city}: {path_a}, Cost: {cost_a}")
 # nodes visited by prioritizing paths that are likely to lead to the goal. However, 
 # A* efficiency can vary depending on the accuracy and admissibility of the heuristic,
 # influencing the algorithm's ability to find the optimal solution in a timely manner.
+
+### ChatGPT Disclaimer
+# We utilized ChatGPT on this assignment as a way to check our work and the code we had written. It helped us to 
+# better understand the algorithms themselves and how/why they are designed the way they are, especially A* search 
+# which is newer to us. Along with this, we used it to adjust the comments we placed in our code to have a stronger, 
+# more accurate description of the algorithm.
